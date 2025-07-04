@@ -448,11 +448,137 @@ npm test
 
 ### Submission Guidelines
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes with tests
-4. Run the test suite: `npm test`
-5. Submit a pull request
+#### Branch Naming Convention
+
+Follow our branch naming rules for different types of contributions:
+
+- **🌟 Features**: `feature/your-feature-name`
+
+  ```bash
+  git checkout -b feature/add-validation-methods
+  ```
+
+- **🐛 Bug Fixes**: `bugfixes/issue-description`
+
+  ```bash
+  git checkout -b bugfixes/fix-timestamp-overflow
+  ```
+
+- **🩹 Patches**: `patch/improvement-name`
+
+  ```bash
+  git checkout -b patch/update-dependencies
+  ```
+
+- **🚨 Hotfixes**: `hotfixes/critical-issue`
+
+  ```bash
+  git checkout -b hotfixes/security-vulnerability
+  ```
+
+- **📋 Tasks**: `task/task-description`
+
+  ```bash
+  git checkout -b task/refactor-test-suite
+  ```
+
+#### Pull Request Process
+
+1. **Fork the Repository**
+
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/uusid.git
+   cd uusid
+   ```
+
+2. **Create Your Branch** (following naming convention above)
+
+   ```bash
+   git checkout -b feature/your-awesome-feature
+   ```
+
+3. **Make Your Changes**
+   - Write clean, well-documented code
+   - Add tests for new functionality
+   - Update documentation if needed
+   - Follow existing code style
+
+4. **Test Your Changes**
+
+   ```bash
+   npm test          # Run all tests
+   npm run benchmark # Check performance impact
+   npm run example   # Verify examples work
+   ```
+
+5. **Commit Your Changes**
+
+   ```bash
+   git add .
+   git commit -m "feat: add awesome new feature"
+   ```
+   
+   **Commit Message Format:**
+   - `feat:` for new features
+   - `fix:` for bug fixes  
+   - `docs:` for documentation
+   - `test:` for tests
+   - `refactor:` for code refactoring
+   - `perf:` for performance improvements
+
+6. **Push to Your Fork**
+
+   ```bash
+   git push origin feature/your-awesome-feature
+   ```
+
+7. **Create Pull Request**
+   - Go to GitHub and create a PR from your fork
+   - Use a clear, descriptive title
+   - Provide detailed description of changes
+   - Reference any related issues
+   - Add screenshots/examples if applicable
+
+8. **Review Process**
+   - Your PR will be reviewed by maintainers
+   - Address any feedback or requested changes
+   - Once approved and merged by the **Owner**, your changes will be:
+     - ✅ **Automatically deployed** to npm
+     - 📦 **Published** as a new version
+     - 🎉 **Available** for all users
+
+#### PR Template
+
+When creating a pull request, please include:
+
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] 🌟 Feature (feature/)
+- [ ] 🐛 Bug fix (bugfixes/)
+- [ ] 🩹 Patch (patch/)
+- [ ] 🚨 Hotfix (hotfixes/)
+- [ ] 📋 Task (task/)
+
+## Testing
+- [ ] Tests pass locally
+- [ ] Added tests for new functionality
+- [ ] Benchmarks show no performance regression
+
+## Checklist
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] No breaking changes (or documented)
+```
+
+#### Getting Help
+
+- 💬 **Discussions**: Use GitHub Discussions for questions
+- 🐛 **Issues**: Report bugs via GitHub Issues  
+- 📧 **Contact**: Reach out to maintainers for guidance
 
 ---
 
