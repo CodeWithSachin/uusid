@@ -1,0 +1,48 @@
+{
+  "name": "@code_with_sachin/uusid",
+  "version": "2.0.0",
+  "description": "Ultra Unique Secure ID generator combining UUID4 randomness with UUID1 time-based components for maximum collision resistance",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "example.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test.js",
+    "benchmark": "node benchmark.js",
+    "example": "node example.js"
+  },
+  "keywords": [
+    "uuid",
+    "uusid",
+    "unique",
+    "identifier",
+    "random",
+    "time-based",
+    "collision-resistant",
+    "hybrid",
+    "secure",
+    "id",
+    "generator",
+    "typescript"
+  ],
+  "author": "Sachin Singh",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeWithSachin/uusid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CodeWithSachin/uusid/issues"
+  },
+  "homepage": "https://github.com/CodeWithSachin/uusid#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
