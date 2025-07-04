@@ -16,6 +16,9 @@
     "benchmark": "node benchmark.js",
     "example": "node example.js"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "keywords": [
     "uuid",
     "uusid",
