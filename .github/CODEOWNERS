@@ -1,0 +1,22 @@
+# Global code owners - these users will be requested for review on all PRs
+* @CodeWithSachin
+
+# Package configuration files require owner approval
+package.json @CodeWithSachin
+package-lock.json @CodeWithSachin
+
+# Core library files require owner approval
+index.js @CodeWithSachin
+index.d.ts @CodeWithSachin
+
+# Documentation changes require owner approval
+README.md @CodeWithSachin
+LICENSE @CodeWithSachin
+
+# GitHub configuration files require owner approval
+.github/ @CodeWithSachin
+
+# Test files can be reviewed by contributors but owner approval recommended
+test.js @CodeWithSachin
+benchmark.js @CodeWithSachin
+example.js @CodeWithSachin

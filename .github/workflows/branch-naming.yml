@@ -1,0 +1,71 @@
+name: Branch Naming Convention
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-branch-naming:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch naming convention
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "🔍 Checking branch name: $BRANCH_NAME"
+
+          if [[ $BRANCH_NAME =~ ^(feature|bugfixes|patch|hotfixes|task)\/[a-z0-9-]+$ ]]; then
+            echo "✅ Branch name follows convention"
+            echo "📋 Type: $(echo $BRANCH_NAME | cut -d'/' -f1)"
+            echo "📝 Description: $(echo $BRANCH_NAME | cut -d'/' -f2)"
+          else
+            echo "❌ Branch name does not follow convention"
+            echo ""
+            echo "🚨 Expected format: type/description-with-hyphens"
+            echo ""
+            echo "📋 Valid types:"
+            echo "  🌟 feature/    - New features and enhancements"
+            echo "  🐛 bugfixes/   - Bug fixes and error corrections"
+            echo "  🩹 patch/      - Minor improvements and updates"
+            echo "  🚨 hotfixes/   - Critical production issues"
+            echo "  📋 task/       - Development tasks and refactoring"
+            echo ""
+            echo "✅ Valid examples:"
+            echo "  - feature/add-validation-methods"
+            echo "  - bugfixes/fix-timestamp-overflow"
+            echo "  - patch/update-dependencies"
+            echo "  - hotfixes/security-vulnerability"
+            echo "  - task/refactor-test-suite"
+            echo ""
+            echo "❌ Invalid examples:"
+            echo "  - Feature/NewMethod (use lowercase)"
+            echo "  - fix-bug (missing type prefix)"
+            echo "  - feature/add new method (no spaces)"
+            echo "  - bugfix/issue (use 'bugfixes' not 'bugfix')"
+            exit 1
+          fi
+
+  validate-pr-content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title and description
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+
+          echo "🔍 Validating PR content..."
+          echo "📝 Title: $PR_TITLE"
+
+          # Check if title follows conventional commit format
+          if [[ $PR_TITLE =~ ^(feat|fix|docs|test|refactor|perf|chore)(\(.+\))?: .+ ]]; then
+            echo "✅ PR title follows conventional commit format"
+          else
+            echo "⚠️  PR title should follow conventional commit format"
+            echo "   Example: 'feat: add new validation method'"
+          fi
+
+          # Check if description contains required sections
+          if [[ $PR_BODY == *"## Description"* ]] && [[ $PR_BODY == *"## Type of Change"* ]]; then
+            echo "✅ PR description contains required sections"
+          else
+            echo "⚠️  Please use the PR template with required sections"
+          fi
