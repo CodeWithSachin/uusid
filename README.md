@@ -59,7 +59,7 @@ const { createGenerator } = require('@code_with_sachin/uusid');
 
 // Create generator with custom settings
 const generator = createGenerator({
-  nodeId: 'aabbccddeeff',  // Custom MAC address
+  nodeId: 'code with sachin',  // Custom MAC address
   clockSeq: 12345          // Custom clock sequence
 });
 
