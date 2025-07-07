@@ -1,6 +1,6 @@
 {
   "name": "@code_with_sachin/uusid",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Ultra Unique Secure ID generator combining UUID4 randomness with UUID1 time-based components for maximum collision resistance",
   "main": "index.js",
   "types": "index.d.ts",
