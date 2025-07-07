@@ -2,11 +2,11 @@
 
 **Ultra Unique Secure ID generator combining UUID4 randomness with UUID1 time-based components for maximum collision resistance.**
 
-[![npm version](https://img.shields.io/npm/v/uusid)](https://npmjs.com/package/uusid)
-[![npm downloads](https://img.shields.io/npm/dt/uusid)](https://npmjs.com/package/uusid)
+[![npm version](https://img.shields.io/npm/v/@code_with_sachin/uusid)](https://npmjs.com/package/@code_with_sachin/uusid)
+[![npm downloads](https://img.shields.io/npm/dt/@code_with_sachin/uusid)](https://npmjs.com/package/@code_with_sachin/uusid)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
-[![Node version](https://img.shields.io/node/v/uusid)](https://nodejs.org)
-[![Collision resistance](https://img.shields.io/badge/collision_probability-~0%25-brightgreen)](https://github.com/CodeWithSachin/uusid)
+[![Node version](https://img.shields.io/node/v/@code_with_sachin/uusid)](https://nodejs.org)
+[![Collision resistance](https://img.shields.io/badge/collision_probability-~0%25-brightgreen)](https://github.com/CodeWithSachin/@code_with_sachin/uusid)
 
 **Navigation:** [Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [API](#-api-reference) • [Performance](#-performance) • [Collision Analysis](#-collision-analysis)
 
