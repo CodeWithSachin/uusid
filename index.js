@@ -123,19 +123,23 @@ class UUSIDGenerator {
 
     // Alternative format: Base32
     base32() {
-        const uuid = this.generate().replace(/-/g, '');
-        const buffer = Buffer.from(uuid, 'hex');
+        const uuid = this.generate();
+        // Convert to hex string (remove separators) then to buffer for Base32 encoding
+        const hexString = uuid.replace(new RegExp(this.separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '');
+        const buffer = Buffer.from(hexString, 'hex');
         return this.toBase32(buffer);
     }
 
     // Alternative format: URL-safe
     urlSafe() {
-        return this.generate().replace(/-/g, '').toLowerCase();
+        const uuid = this.generate();
+        return uuid.replace(new RegExp(this.separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '').toLowerCase();
     }
 
     // Alternative format: Compact
     compact() {
-        return this.generate().replace(/-/g, '');
+        const uuid = this.generate();
+        return uuid.replace(new RegExp(this.separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '');
     }
 
     // Alternative format: Hierarchical
@@ -144,12 +148,14 @@ class UUSIDGenerator {
 
         if (parent) {
             // Generate child ID based on parent - add only one level
-            const id = this.generate().replace(/-/g, '');
+            const uuid = this.generate();
+            const id = uuid.replace(new RegExp(this.separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '');
             const childPart = id.substring(0, 10); // Take first 10 chars as child identifier
             return `${parent}${separator}${childPart}`;
         } else {
             // Generate root hierarchical ID
-            const id = this.generate().replace(/-/g, '');
+            const uuid = this.generate();
+            const id = uuid.replace(new RegExp(this.separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '');
             const parts = [];
             const partLength = Math.floor(id.length / levels);
 
@@ -228,10 +234,11 @@ class UUSIDGenerator {
             cleanId = id.substring(this.prefix.length + 1);
         }
 
-        // Basic format validation - standard UUID format
-        const standardUuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        // Create dynamic regex based on current separator
+        const escapedSeparator = this.separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const uuidRegex = new RegExp(`^[0-9a-f]{8}${escapedSeparator}[0-9a-f]{4}${escapedSeparator}[0-9a-f]{4}${escapedSeparator}[0-9a-f]{4}${escapedSeparator}[0-9a-f]{12}$`, 'i');
 
-        if (!standardUuidRegex.test(cleanId)) {
+        if (!uuidRegex.test(cleanId)) {
             return {
                 valid: false,
                 isValid: false,
@@ -242,7 +249,8 @@ class UUSIDGenerator {
         }
 
         // Calculate entropy (approximate)
-        const entropy = cleanId.replace(/-/g, '').split('').reduce((acc, char, i, arr) => {
+        const hexString = cleanId.replace(new RegExp(escapedSeparator, 'g'), '');
+        const entropy = hexString.split('').reduce((acc, char, i, arr) => {
             const charCount = arr.filter(c => c === char).length;
             const probability = charCount / arr.length;
             return acc - probability * Math.log2(probability);
@@ -289,7 +297,10 @@ class UUSIDGenerator {
 
     // Extract timestamp from ID
     extractTimestamp(id) {
-        const cleanId = id.replace(/-/g, '').replace(/\./g, '');
+        // Remove separators (handle both custom separator and dots from hierarchical IDs)
+        const escapedSeparator = this.separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const cleanId = id.replace(new RegExp(escapedSeparator, 'g'), '').replace(/\./g, '');
+
         if (cleanId.length < 32) {
             throw new Error('Invalid ID format for timestamp extraction');
         }
@@ -351,7 +362,7 @@ class UUSIDGenerator {
                 // Analyze format
                 if (this.prefix && id.startsWith(`${this.prefix}${this.separator}`)) {
                     analysis.formats.prefixed++;
-                } else if (id.includes('-')) {
+                } else if (id.includes(this.separator)) {
                     analysis.formats.standard++;
                 } else {
                     analysis.formats.custom++;
