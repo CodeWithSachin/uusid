@@ -59,12 +59,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm install
 
       - name: Debug package info
         run: |
