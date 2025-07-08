@@ -1,6 +1,6 @@
 {
   "name": "@code_with_sachin/uusid",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Ultra Unique Secure ID generator with multiple formats, encryption, hierarchical IDs, and advanced features for modern applications",
   "main": "index.js",
   "types": "index.d.ts",
