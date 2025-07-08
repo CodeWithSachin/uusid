@@ -13,6 +13,7 @@ permissions:
   contents: write
   packages: write
   pull-requests: read
+  id-token: write
 
 jobs:
   test:
@@ -70,11 +71,31 @@ jobs:
             npm install
           fi
 
+      - name: Check NPM authentication
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Get current version
         id: current_version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
+      - name: Check if version exists on NPM
+        id: check_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if npm view @code_with_sachin/uusid@$CURRENT_VERSION version 2>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Version $CURRENT_VERSION already exists on NPM"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Version $CURRENT_VERSION does not exist on NPM"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Increment patch version
+        if: steps.check_version.outputs.exists == 'true'
         run: |
           npm version patch --no-git-tag-version
           echo "New version: $(node -p "require('./package.json').version")"
@@ -84,18 +105,31 @@ jobs:
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Commit version bump
+        if: steps.check_version.outputs.exists == 'true'
         run: |
           git add package.json
-          git commit -m "chore: bump version to ${{ steps.new_version.outputs.version }} [skip ci]"
-          git push
+          git commit -m "chore: bump version to ${{ steps.new_version.outputs.version }} [skip ci]" || echo "No changes to commit"
+          git push || echo "Failed to push, continuing anyway"
 
       - name: Create Git tag
         run: |
-          git tag "v${{ steps.new_version.outputs.version }}"
-          git push origin "v${{ steps.new_version.outputs.version }}"
+          git tag "v${{ steps.new_version.outputs.version }}" || echo "Tag already exists"
+          git push origin "v${{ steps.new_version.outputs.version }}" || echo "Failed to push tag, continuing anyway"
+
+      - name: Run pre-publish checks
+        run: |
+          npm run test
+          npm pack --dry-run
 
       - name: Publish to NPM
-        run: npm publish
+        run: |
+          if [ "${{ steps.check_version.outputs.exists }}" = "true" ]; then
+            echo "Publishing new version ${{ steps.new_version.outputs.version }}"
+            npm publish --access public
+          else
+            echo "Publishing current version ${{ steps.new_version.outputs.version }}"
+            npm publish --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -147,7 +181,17 @@ jobs:
             npm install
           fi
 
+      - name: Check NPM authentication
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Run pre-publish checks
+        run: |
+          npm run test
+          npm pack --dry-run
+
       - name: Publish to NPM
-        run: npm publish
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

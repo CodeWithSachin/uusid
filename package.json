@@ -4,13 +4,9 @@
   "description": "Ultra Unique Secure ID generator with multiple formats, encryption, hierarchical IDs, and advanced features for modern applications",
   "main": "index.js",
   "types": "index.d.ts",
-  "files": [
-    "index.js",
-    "index.d.ts",
-    "example.js",
-    "README.md",
-    "LICENSE"
-  ],
+  "bin": {
+    "uusid": "./cli.js"
+  },
   "scripts": {
     "test": "node test.js",
     "benchmark": "node benchmark.js",
