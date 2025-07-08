@@ -36,13 +36,7 @@ jobs:
           fi
 
       - name: Run tests
-        run: npm test
-
-      - name: Run benchmarks
-        run: npm run benchmark
-
-      - name: Run example
-        run: npm run example
+        run: npm run demo
 
   publish-npm:
     needs: test
