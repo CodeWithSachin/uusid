@@ -1,7 +1,7 @@
 {
   "name": "@code_with_sachin/uusid",
-  "version": "2.0.4",
-  "description": "Ultra Unique Secure ID generator combining UUID4 randomness with UUID1 time-based components for maximum collision resistance",
+  "version": "3.0.0",
+  "description": "Ultra Unique Secure ID generator with multiple formats, encryption, hierarchical IDs, and advanced features for modern applications",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
@@ -14,7 +14,12 @@
   "scripts": {
     "test": "node test.js",
     "benchmark": "node benchmark.js",
-    "example": "node example.js"
+    "example": "node example.js",
+    "validate": "node -e \"const {validate, uusid} = require('./index.js'); console.log(validate(uusid()))\"",
+    "health": "node -e \"const {healthCheck} = require('./index.js'); healthCheck().then(console.log)\"",
+    "metrics": "node -e \"const {getMetrics} = require('./index.js'); console.log(getMetrics())\"",
+    "demo": "npm run example && npm run test && npm run benchmark",
+    "prepack": "npm test"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -31,7 +36,22 @@
     "secure",
     "id",
     "generator",
-    "typescript"
+    "typescript",
+    "encrypted",
+    "hierarchical",
+    "prefixed",
+    "base32",
+    "url-safe",
+    "compact",
+    "performance",
+    "batch",
+    "validation",
+    "analysis",
+    "metrics",
+    "content-based",
+    "deterministic",
+    "worker-pool",
+    "high-volume"
   ],
   "author": "Sachin Singh",
   "license": "ISC",
@@ -47,5 +67,22 @@
     "node": ">=14.0.0"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "benchmark": "^2.1.4"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "cli.js",
+    "example.js",
+    "README.md",
+    "LICENSE"
+  ]
 }
