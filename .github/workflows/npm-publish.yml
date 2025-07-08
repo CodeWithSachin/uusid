@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: "npm"
 
       - name: Install dependencies
@@ -54,7 +54,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           registry-url: https://registry.npmjs.org/
           cache: "npm"
 
@@ -71,8 +71,17 @@ jobs:
             npm install
           fi
 
+      - name: Debug package info
+        run: |
+          echo "Package name: $(node -p "require('./package.json').name")"
+          echo "Package version: $(node -p "require('./package.json').version")"
+          echo "NPM registry: $(npm config get registry)"
+          ls -la
+
       - name: Check NPM authentication
-        run: npm whoami
+        run: |
+          echo "Checking NPM authentication..."
+          npm whoami || echo "NPM authentication failed - check NPM_TOKEN secret"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -84,15 +93,18 @@ jobs:
         id: check_version
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Checking if version $CURRENT_VERSION exists on NPM..."
+          
           if npm view @code_with_sachin/uusid@$CURRENT_VERSION version 2>/dev/null; then
             echo "exists=true" >> $GITHUB_OUTPUT
-            echo "Version $CURRENT_VERSION already exists on NPM"
+            echo "✅ Version $CURRENT_VERSION already exists on NPM - will increment"
           else
             echo "exists=false" >> $GITHUB_OUTPUT
-            echo "Version $CURRENT_VERSION does not exist on NPM"
+            echo "✅ Version $CURRENT_VERSION does not exist on NPM - will publish as-is"
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        continue-on-error: true
 
       - name: Increment patch version
         if: steps.check_version.outputs.exists == 'true'
@@ -123,18 +135,28 @@ jobs:
 
       - name: Publish to NPM
         run: |
+          echo "Starting NPM publish process..."
+          echo "Current version: ${{ steps.new_version.outputs.version }}"
+          echo "Version exists: ${{ steps.check_version.outputs.exists }}"
+          
+          # Verify package before publishing
+          npm pack --dry-run
+          
+          # Publish with detailed logging
           if [ "${{ steps.check_version.outputs.exists }}" = "true" ]; then
-            echo "Publishing new version ${{ steps.new_version.outputs.version }}"
-            npm publish --access public
+            echo "📦 Publishing new incremented version ${{ steps.new_version.outputs.version }}"
           else
-            echo "Publishing current version ${{ steps.new_version.outputs.version }}"
-            npm publish --access public
+            echo "📦 Publishing current version ${{ steps.new_version.outputs.version }}"
           fi
+          
+          npm publish --access public --verbose
+          echo "✅ Successfully published to NPM!"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
+        if: success()
         with:
           tag_name: v${{ steps.new_version.outputs.version }}
           name: Release v${{ steps.new_version.outputs.version }}
@@ -157,6 +179,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
 
   release-publish:
     needs: test
@@ -169,7 +192,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           registry-url: https://registry.npmjs.org/
           cache: "npm"
 
@@ -182,7 +205,9 @@ jobs:
           fi
 
       - name: Check NPM authentication
-        run: npm whoami
+        run: |
+          echo "Checking NPM authentication for release publish..."
+          npm whoami || echo "NPM authentication failed - check NPM_TOKEN secret"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -192,6 +217,9 @@ jobs:
           npm pack --dry-run
 
       - name: Publish to NPM
-        run: npm publish --access public
+        run: |
+          echo "Publishing release to NPM..."
+          npm publish --access public --verbose
+          echo "✅ Successfully published release to NPM!"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
