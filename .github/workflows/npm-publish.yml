@@ -37,7 +37,7 @@ jobs:
           fi
 
       - name: Run tests
-        run: npm run demo
+        run: npm run test
 
   publish-npm:
     needs: test
