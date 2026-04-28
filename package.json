@@ -1,21 +1,41 @@
 {
   "name": "@code_with_sachin/uusid",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Ultra Unique Secure ID generator with multiple formats, encryption, hierarchical IDs, and advanced features for modern applications",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "browser": "./browser.mjs",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./index.js",
+      "default": "./index.js"
+    },
+    "./server": {
+      "types": "./server.d.ts",
+      "require": "./server.js",
+      "default": "./server.js"
+    },
+    "./browser": {
+      "types": "./browser.d.ts",
+      "import": "./browser.mjs",
+      "default": "./browser.mjs"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "uusid": "./cli.js"
   },
   "scripts": {
     "test": "node test.js",
+    "test:browser": "node test.browser.mjs",
     "benchmark": "node benchmark.js",
     "example": "node example.js",
     "validate": "node -e \"const {validate, uusid} = require('./index.js'); console.log(validate(uusid()))\"",
     "health": "node -e \"const {healthCheck} = require('./index.js'); healthCheck().then(console.log)\"",
     "metrics": "node -e \"const {getMetrics} = require('./index.js'); console.log(getMetrics())\"",
     "demo": "npm run example && npm run test && npm run benchmark",
-    "prepack": "npm test"
+    "prepack": "npm test && npm run test:browser"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -76,6 +96,10 @@
   "files": [
     "index.js",
     "index.d.ts",
+    "server.js",
+    "server.d.ts",
+    "browser.mjs",
+    "browser.d.ts",
     "cli.js",
     "example.js",
     "README.md",
